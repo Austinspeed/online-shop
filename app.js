@@ -19,7 +19,10 @@ const baseRoutes = require('./routes/base.routes');
 const adminRoutes = require('./routes/admin.routes');
 const cartRoutes = require('./routes/cart.routes');
 const ordersRoutes = require('./routes/orders.routes');
+
 const apiProductsRoutes = require('./routes/api/products.routes');
+const authApiRoutes = require('./routes/api/auth.routes');
+const apiCartRoutes = require('./routes/api/cart.routes');
 
 const app = express();
 
@@ -50,6 +53,8 @@ app.use('/orders', protectRoutesMiddleware, ordersRoutes);
 app.use('/admin', protectRoutesMiddleware, adminRoutes);
 
 app.use('/api', apiProductsRoutes);
+app.use('/api/auth', authApiRoutes);
+app.use('/api/cart', apiCartRoutes);
 
 app.use(notFoundMiddleware);
 
