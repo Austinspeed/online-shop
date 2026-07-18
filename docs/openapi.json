@@ -1,0 +1,200 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Online Shop API",
+    "version": "1.0.0",
+    "description": "REST API for the Online Shop application generated using swagger-jsdoc."
+  },
+  "servers": [
+    {
+      "url": "http://localhost:3000",
+      "description": "Local Development Server"
+    }
+  ],
+  "tags": [
+    {
+      "name": "Products",
+      "description": "Operations related to products"
+    }
+  ],
+  "components": {
+    "schemas": {
+      "Product": {
+        "type": "object",
+        "required": [
+          "title",
+          "summary",
+          "price",
+          "description",
+          "image"
+        ],
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "MongoDB ObjectId",
+            "example": "6879f77f36b2b4e37dfdc123"
+          },
+          "title": {
+            "type": "string",
+            "example": "Gaming Laptop"
+          },
+          "summary": {
+            "type": "string",
+            "example": "High performance laptop"
+          },
+          "price": {
+            "type": "number",
+            "format": "float",
+            "example": 2499.99
+          },
+          "description": {
+            "type": "string",
+            "example": "Powerful gaming laptop with RTX graphics."
+          },
+          "image": {
+            "type": "string",
+            "description": "Image filename",
+            "example": "laptop.jpg"
+          },
+          "imagePath": {
+            "type": "string",
+            "readOnly": true,
+            "example": "product-data/images/laptop.jpg"
+          },
+          "imageUrl": {
+            "type": "string",
+            "readOnly": true,
+            "example": "/products/assets/images/laptop.jpg"
+          }
+        }
+      }
+    }
+  },
+  "paths": {
+    "/api/products": {
+      "get": {
+        "summary": "Get all products",
+        "description": "Returns a list of all available products.",
+        "tags": [
+          "Products"
+        ],
+        "responses": {
+          "200": {
+            "description": "Products retrieved successfully.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean"
+                    },
+                    "count": {
+                      "type": "integer"
+                    },
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/Product"
+                      }
+                    }
+                  }
+                },
+                "example": {
+                  "success": true,
+                  "count": 2,
+                  "data": [
+                    {
+                      "id": "6879f77f36b2b4e37dfdc123",
+                      "title": "Gaming Laptop",
+                      "summary": "High performance laptop",
+                      "price": 2499.99,
+                      "description": "Powerful gaming laptop with RTX graphics.",
+                      "image": "laptop.jpg",
+                      "imagePath": "product-data/images/laptop.jpg",
+                      "imageUrl": "/products/assets/images/laptop.jpg"
+                    },
+                    {
+                      "id": "6879f77f36b2b4e37dfdc124",
+                      "title": "Wireless Mouse",
+                      "summary": "Ergonomic wireless mouse",
+                      "price": 49.99,
+                      "description": "Rechargeable Bluetooth mouse.",
+                      "image": "mouse.jpg",
+                      "imagePath": "product-data/images/mouse.jpg",
+                      "imageUrl": "/products/assets/images/mouse.jpg"
+                    }
+                  ]
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/products/{id}": {
+      "get": {
+        "summary": "Get a product by ID",
+        "description": "Returns the details of a single product.",
+        "tags": [
+          "Products"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "description": "MongoDB Product ID",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Product found.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean"
+                    },
+                    "data": {
+                      "$ref": "#/components/schemas/Product"
+                    }
+                  }
+                },
+                "example": {
+                  "success": true,
+                  "data": {
+                    "id": "6879f77f36b2b4e37dfdc123",
+                    "title": "Gaming Laptop",
+                    "summary": "High performance laptop",
+                    "price": 2499.99,
+                    "description": "Powerful gaming laptop with RTX graphics.",
+                    "image": "laptop.jpg",
+                    "imagePath": "product-data/images/laptop.jpg",
+                    "imageUrl": "/products/assets/images/laptop.jpg"
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Product not found.",
+            "content": {
+              "application/json": {
+                "example": {
+                  "success": false,
+                  "message": "Product not found"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
