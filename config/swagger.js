@@ -3,6 +3,7 @@ const swaggerJSDoc = require('swagger-jsdoc');
 const options = {
   definition: {
     openapi: '3.0.0',
+
     info: {
       title: 'Online Shop API',
       version: '1.0.0',
@@ -19,8 +20,24 @@ const options = {
 
     tags: [
       {
+        name: 'Authentication',
+        description: 'Authentication and user management'
+      },
+      {
         name: 'Products',
         description: 'Operations related to products'
+      },
+      {
+        name: 'Cart',
+        description: 'Shopping cart operations'
+      },
+      {
+        name: 'Orders',
+        description: 'Customer order operations'
+      },
+      {
+        name: 'Admin',
+        description: 'Administrative operations'
       }
     ],
 
@@ -72,6 +89,125 @@ const options = {
               type: 'string',
               readOnly: true,
               example: '/products/assets/images/laptop.jpg'
+            }
+          }
+        },
+
+        CartItem: {
+          type: 'object',
+          properties: {
+            product: {
+              $ref: '#/components/schemas/Product'
+            },
+            quantity: {
+              type: 'integer',
+              example: 2
+            },
+            totalPrice: {
+              type: 'number',
+              format: 'float',
+              example: 4999.98
+            }
+          }
+        },
+
+        Cart: {
+          type: 'object',
+          properties: {
+            items: {
+              type: 'array',
+              items: {
+                $ref: '#/components/schemas/CartItem'
+              }
+            },
+            totalQuantity: {
+              type: 'integer',
+              example: 2
+            },
+            totalPrice: {
+              type: 'number',
+              format: 'float',
+              example: 4999.98
+            }
+          }
+        },
+
+        SignupRequest: {
+          type: 'object',
+          required: [
+            'email',
+            'confirmEmail',
+            'password',
+            'fullname',
+            'street',
+            'postal',
+            'city'
+          ],
+          properties: {
+            email: {
+              type: 'string',
+              format: 'email',
+              example: 'john@example.com'
+            },
+            confirmEmail: {
+              type: 'string',
+              format: 'email',
+              example: 'john@example.com'
+            },
+            password: {
+              type: 'string',
+              format: 'password',
+              example: 'password123'
+            },
+            fullname: {
+              type: 'string',
+              example: 'John Doe'
+            },
+            street: {
+              type: 'string',
+              example: '15 Admiralty Way'
+            },
+            postal: {
+              type: 'string',
+              example: '101001'
+            },
+            city: {
+              type: 'string',
+              example: 'Lagos'
+            }
+          }
+        },
+
+        LoginRequest: {
+          type: 'object',
+          required: [
+            'email',
+            'password'
+          ],
+          properties: {
+            email: {
+              type: 'string',
+              format: 'email',
+              example: 'john@example.com'
+            },
+            password: {
+              type: 'string',
+              format: 'password',
+              example: 'password123'
+            }
+          }
+        },
+
+        ErrorResponse: {
+          type: 'object',
+          properties: {
+            success: {
+              type: 'boolean',
+              example: false
+            },
+            message: {
+              type: 'string',
+              example: 'An error occurred.'
             }
           }
         }
