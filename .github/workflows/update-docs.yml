@@ -1,24 +1,19 @@
-name: Update API Documentation
+name: Update Mintlify API Documentation
 
 on:
   push:
     branches:
       - main
 
-permissions:
-  contents: write
-
 jobs:
-  generate-openapi:
+  update-openapi:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout Repository
+      - name: Checkout online-shop
         uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
 
-      - name: Setup Node
+      - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: 22
@@ -26,16 +21,40 @@ jobs:
       - name: Install Dependencies
         run: npm install
 
-      - name: Generate OpenAPI Spec
+      - name: Generate OpenAPI Specification
         run: npm run generate:openapi
 
-      - name: Generate Mintlify API Pages
-        run: npx @mintlify/scraping@latest openapi-file docs/openapi.json -o api
+      - name: Verify OpenAPI Specification
+        run: |
+          if [ ! -f docs/openapi.json ]; then
+            echo "OpenAPI specification not found!"
+            exit 1
+          fi
 
-      - name: Commit Updated OpenAPI
-        uses: stefanzweifel/git-auto-commit-action@v5
+      - name: Checkout mintlify-docs
+        uses: actions/checkout@v4
         with:
-          commit_message: "docs: regenerate API reference"
-          file_pattern: |
-            docs/openapi.json
-            api/**
+          repository: Austinspeed/mintlify-docs
+          token: ${{ secrets.MINTLIFY_PAT }}
+          path: mintlify-docs
+
+      - name: Copy latest OpenAPI specification
+        run: |
+          cp docs/openapi.json mintlify-docs/openapi.json
+
+      - name: Commit and Push changes
+        run: |
+          cd mintlify-docs
+
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+          git add openapi.json
+
+          if git diff --cached --quiet; then
+            echo "No OpenAPI changes detected."
+            exit 0
+          fi
+
+          git commit -m "docs: update OpenAPI specification"
+          git push origin main
