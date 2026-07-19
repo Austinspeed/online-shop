@@ -285,7 +285,38 @@ const options = {
               example: 'An error occurred.'
             }
           }
-        }
+        },
+        UpdateOrderStatusRequest: {
+          type: 'object',
+          required: [
+            'newStatus'
+          ],
+          properties: {
+            newStatus: {
+              type: 'string',
+              enum: [
+                'pending',
+                'fulfilled',
+                'cancelled'
+              ],
+              example: 'fulfilled'
+            }
+          }
+        },
+
+        SuccessResponse: {
+          type: 'object',
+          properties: {
+            success: {
+              type: 'boolean',
+              example: true
+            },
+            message: {
+              type: 'string',
+              example: 'Operation completed successfully.'
+            }
+          }
+        },
 
       }
     }

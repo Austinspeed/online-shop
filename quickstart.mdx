@@ -1,0 +1,101 @@
+---
+title: "Online Shop API Quickstart: Register, Browse & Buy"
+sidebarTitle: "Quickstart"
+description: "Register an account, log in, browse products, and add an item to your cart with the Online Shop API — all in under five minutes using curl."
+---
+
+This guide walks you through the core Online Shop API workflow from a fresh start. In under five minutes you'll have a registered account, an active session, a product in your cart, and a clear picture of how the API fits together. All examples use `curl` — swap in your HTTP client of choice if you prefer.
+
+<Steps>
+  <Step title="Create your account">
+    Register a new user account by sending a `POST` request to `/api/auth/signup` with your personal and address details.
+
+    ```bash
+    curl -X POST http://localhost:3000/api/auth/signup \
+      -H 'Content-Type: application/json' \
+      -d '{
+        "email": "john@example.com",
+        "confirmEmail": "john@example.com",
+        "password": "password123",
+        "fullname": "John Doe",
+        "street": "15 Admiralty Way",
+        "postal": "101001",
+        "city": "Lagos"
+      }'
+    ```
+
+    A successful registration returns a `201 Created` response with your new user record. The `email` and `confirmEmail` fields must match exactly, and all fields are required.
+  </Step>
+
+  <Step title="Log in">
+    Authenticate with your credentials to start a session. Use the `-c cookies.txt` flag to save the session cookie to a local file — you'll need it for authenticated requests.
+
+    ```bash
+    curl -c cookies.txt -X POST http://localhost:3000/api/auth/login \
+      -H 'Content-Type: application/json' \
+      -d '{
+        "email": "john@example.com",
+        "password": "password123"
+      }'
+    ```
+
+    On success, the server responds with a `200 OK` and sets a session cookie. The `cookies.txt` file now holds your session, and `curl` will attach it automatically to subsequent requests when you use the `-b cookies.txt` flag.
+  </Step>
+
+  <Step title="Browse products">
+    Retrieve the full product catalog. This endpoint is public — no session required.
+
+    ```bash
+    curl http://localhost:3000/api/products
+    ```
+
+    **Example response:**
+
+    ```json
+    {
+      "products": [
+        {
+          "_id": "6879f77f36b2b4e37dfdc123",
+          "name": "Wireless Noise-Cancelling Headphones",
+          "description": "Over-ear headphones with active noise cancellation and 30-hour battery life.",
+          "price": 89.99,
+          "category": "Electronics",
+          "stock": 42
+        },
+        {
+          "_id": "6879f77f36b2b4e37dfdc456",
+          "name": "Ergonomic Office Chair",
+          "description": "Adjustable lumbar support, breathable mesh back, and 5-year warranty.",
+          "price": 249.00,
+          "category": "Furniture",
+          "stock": 15
+        }
+      ]
+    }
+    ```
+
+    Note the `_id` field for each product — you'll use it when adding items to your cart.
+  </Step>
+
+  <Step title="Add to cart">
+    Add a product to your cart by sending its `_id` as `productId`. Include `-b cookies.txt` to attach your active session.
+
+    ```bash
+    curl -b cookies.txt -X POST http://localhost:3000/api/cart/items \
+      -H 'Content-Type: application/json' \
+      -d '{"productId": "6879f77f36b2b4e37dfdc123"}'
+    ```
+
+    A successful response returns your updated cart, including the newly added item. You can call this endpoint multiple times to add more products before placing your order.
+  </Step>
+</Steps>
+
+<Tip>
+  When working with `curl`, use the **`-c <file>`** flag to **save** cookies and **`-b <file>`** to **send** them. Combining both flags in a single command keeps your session alive across multiple calls:
+
+  ```bash
+  curl -c cookies.txt -b cookies.txt -X GET http://localhost:3000/api/cart
+  ```
+
+  This is especially useful when testing a full workflow — register, login, browse, cart, and order — in a single shell session without losing your authentication state.
+</Tip>

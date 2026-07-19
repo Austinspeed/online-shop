@@ -1,0 +1,38 @@
+---
+title: "Introduction to the Online Shop REST API Platform"
+sidebarTitle: "Introduction"
+description: "Learn what the Online Shop API can do. Browse products, manage a shopping cart, and place orders programmatically using straightforward HTTP and JSON."
+---
+
+**Online Shop** is a full-featured e-commerce REST API that gives you everything you need to build a shopping experience from the ground up. With a simple HTTP interface, you can register and manage user accounts, browse a live product catalog, maintain a per-user shopping cart, and submit orders — all without touching a UI. The API returns standard JSON responses and uses session-based authentication via cookies, making it easy to integrate with any HTTP client or web framework.
+
+## What you can do
+
+<CardGroup cols={2}>
+  <Card title="Browse Products" icon="magnifying-glass" href="/guides/browsing-products">
+    Query the full product catalog. Retrieve product details, prices, and availability with a single `GET` request — no login required.
+  </Card>
+  <Card title="Shopping Cart" icon="cart-shopping" href="/guides/managing-cart">
+    Add, update, and remove items from a per-user cart. Your cart persists across sessions so customers never lose their selections.
+  </Card>
+  <Card title="Place Orders" icon="bag-shopping" href="/guides/checkout">
+    Convert a cart into a confirmed order in one request. Track order history and status through dedicated order endpoints.
+  </Card>
+  <Card title="Account Management" icon="user" href="/authentication">
+    Register new accounts with full address details and manage credentials. Secure, session-based login keeps every user's data isolated.
+  </Card>
+</CardGroup>
+
+## How it works
+
+The Online Shop API follows a straightforward flow that mirrors a real shopping experience:
+
+1. **Register** — Call `POST /api/auth/signup` with your email, password, name, and shipping address to create a new account.
+2. **Log in** — Authenticate with `POST /api/auth/login`. The server sets a secure session cookie that is automatically attached to all future requests.
+3. **Browse** — Use `GET /api/products` to explore available products. This endpoint is public and requires no session.
+4. **Add to cart** — Send `POST /api/cart/items` with a `productId` to add a product to your cart. Retrieve your cart at any time with `GET /api/cart`.
+5. **Place an order** — When you're ready to check out, submit your order through the orders endpoint. Your cart is cleared and an order record is created.
+
+<Note>
+  Authentication is required for all cart and order operations. Requests to endpoints such as `GET /api/cart`, `POST /api/cart/items`, and `POST /api/orders` without a valid session will return a **401 Unauthorized** response. Make sure to log in and include your session cookie before calling these endpoints.
+</Note>
