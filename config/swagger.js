@@ -43,6 +43,7 @@ const options = {
 
     components: {
       schemas: {
+
         Product: {
           type: 'object',
           required: [
@@ -132,6 +133,80 @@ const options = {
           }
         },
 
+        Address: {
+          type: 'object',
+          properties: {
+            street: {
+              type: 'string',
+              example: '15 Admiralty Way'
+            },
+            postalCode: {
+              type: 'string',
+              example: '101001'
+            },
+            city: {
+              type: 'string',
+              example: 'Lagos'
+            }
+          }
+        },
+
+        User: {
+          type: 'object',
+          properties: {
+            _id: {
+              type: 'string',
+              example: '6879f77f36b2b4e37dfdc111'
+            },
+            email: {
+              type: 'string',
+              format: 'email',
+              example: 'john@example.com'
+            },
+            name: {
+              type: 'string',
+              example: 'John Doe'
+            },
+            address: {
+              $ref: '#/components/schemas/Address'
+            }
+          }
+        },
+
+        Order: {
+          type: 'object',
+          properties: {
+            id: {
+              type: 'string',
+              example: '6879f77f36b2b4e37dfdc456'
+            },
+            status: {
+              type: 'string',
+              enum: [
+                'pending',
+                'fulfilled',
+                'cancelled'
+              ],
+              example: 'pending'
+            },
+            date: {
+              type: 'string',
+              format: 'date-time',
+              example: '2026-07-19T12:00:00.000Z'
+            },
+            formattedDate: {
+              type: 'string',
+              example: 'Sat, July 19, 2026'
+            },
+            userData: {
+              $ref: '#/components/schemas/User'
+            },
+            productData: {
+              $ref: '#/components/schemas/Cart'
+            }
+          }
+        },
+
         SignupRequest: {
           type: 'object',
           required: [
@@ -211,6 +286,7 @@ const options = {
             }
           }
         }
+
       }
     }
   },

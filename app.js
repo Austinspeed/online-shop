@@ -23,6 +23,7 @@ const ordersRoutes = require('./routes/orders.routes');
 const apiProductsRoutes = require('./routes/api/products.routes');
 const authApiRoutes = require('./routes/api/auth.routes');
 const apiCartRoutes = require('./routes/api/cart.routes');
+const ordersApiRoutes = require('./routes/api/orders.routes');
 
 const app = express();
 
@@ -55,6 +56,7 @@ app.use('/admin', protectRoutesMiddleware, adminRoutes);
 app.use('/api', apiProductsRoutes);
 app.use('/api/auth', authApiRoutes);
 app.use('/api/cart', apiCartRoutes);
+app.use('/api/orders', ordersApiRoutes);
 
 app.use(notFoundMiddleware);
 
